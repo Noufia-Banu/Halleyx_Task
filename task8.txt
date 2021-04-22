@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Choose the type of document</p>
+
+<form action="/action_page.php">
+  <label for="cars">Choose a Identity:</label>
+  <select name="Identity" id="cards">
+    <option value="Aadhar">Aadhar</option>
+    <option value="PanCard">PanCard</option>
+    <option value="Passport">Passport</option>
+    
+  </select>
+  <br><br>
+ 
+</form>
+<p>Drag and drop your file here</p>
+
+<form action="/action_page.php">
+  <input type="file" id="myFile" name="filename">
+  <input type="submit">
+</form>
+
+
+</body>
+</html>
+from PIL import Image
+import pytesseract
+import argparse
+import  numpy as np 
+import cv2   
+import os
+
+pytesseract.pytesseract.tesseract_cmd='C:\\Users\\LENOVO\\AppData\\Local\\Programs\\Tesseract-OCR\\tesseract.exe'
+
+def ocr(img):
+        txt = pytesseract.image_to_string(img)
+        return txt
+
+def get_grayscale(image):
+        return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+def remove_noise(image):
+        return cv2.medianBlur(image,5)
+
+def thresholding(image):
+        return cv2.threshold(image, 0, 255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+
+
+img = cv2.imread('SKpan.jpeg')
+
+img = get_grayscale(img)
+img = thresholding(img)
+img = remove_noise(img)
+
+print(ocr(img))
